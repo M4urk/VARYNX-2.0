@@ -20,7 +20,7 @@ This file contains public-safe information only. No internal implementation deta
 ### Changed
 - Module count increased to 78 registered modules across 7 categories
 - Protection module count increased to 17
-- Desktop Control Center now has 13 navigation tabs
+- Desktop Control Center now has 12 navigation tabs (QR Scan removed — camera-only feature)
 - Settings screen uses Armoury Crate-inspired tab layout with expandable sections
 - Test assertions updated to reflect new module counts
 - Stability certificate updated to public-safe format (393 tests, 0 failures, 12 modules)

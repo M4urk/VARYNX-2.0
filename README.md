@@ -33,6 +33,8 @@ No cloud. No accounts. No tracking. Your data never leaves your devices.
 VARYNX 2.0 is in late beta.
 All modules build successfully and all automated tests pass.
 
+VARYNX 1.0 is still actively maintained and receives security patches and bug fixes.
+
 This repository contains **public-facing information only**.
 No private code, internal logic, or security-sensitive implementation details are included here.
 

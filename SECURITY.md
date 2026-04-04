@@ -5,7 +5,7 @@
 | Version | Supported |
 |---------|-----------|
 | 2.0.x (beta) | Yes |
-| 1.x | No longer maintained |
+| 1.x | Yes (maintenance) |
 
 ## Reporting a Vulnerability
 
