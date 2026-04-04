@@ -4,43 +4,31 @@
 
 Every device in the VARYNX mesh is assigned a role that determines its capabilities, responsibilities, and resource allocation. Roles are set at identity generation time and encoded in the device's Ed25519 identity certificate.
 
+Eight device classes across four tiers:
+- **Controller tier**: CONTROLLER (trust authority, mesh controller)
+- **Full guardian tier**: GUARDIAN (full scans, reflex, identity)
+- **Hub tier**: HUB_HOME (LAN anchor), HUB_WEAR (watch aggregator)
+- **Node tier**: NODE_LINUX (headless server), NODE_POCKET (on-person), NODE_SATELLITE (edge/offline), GUARDIAN_MICRO (constrained)
+
 ## Role Definitions
 
-### SENTINEL
-**Platforms**: Linux home servers, Raspberry Pi, always-on hardware
-
-| Property | Value |
-|----------|-------|
-| Priority | Highest in mesh |
-| Engines | Full OS-level (process, network, USB, file integrity, startup) |
-| Sync | LAN primary, BLE optional |
-| Storage | Full threat log, trust graph authority |
-| Power | Always-on assumed |
-
-**Responsibilities**:
-- Anchor node for mesh trust graph
-- Persistent threat event storage and cross-device log aggregation
-- Policy distribution to other mesh members
-- Intelligence pack hosting and validation
-
----
-
 ### CONTROLLER
-**Platforms**: Windows Desktop, Linux Desktop (laptops)
+**Platforms**: Windows Desktop
 
 | Property | Value |
 |----------|-------|
-| Priority | High |
-| Engines | Full OS-level (same as Sentinel) |
+| Priority | 5 (Highest) |
+| Engines | Full OS-level + mesh controller |
 | Sync | LAN + BLE |
-| Storage | Local threat log, trust graph replica |
-| Power | Battery-aware (power-save mode when unplugged) |
+| Storage | Full trust graph authority, threat log |
+| Power | Battery-aware |
 
 **Responsibilities**:
-- Full guardian loop with UI (dashboard, events, pairing, settings)
+- Trust graph authority — owns mesh policy
+- Device dashboard (topology, roles, threats, health)
 - Hub for pairing new devices (generates 6-digit codes)
 - Engine diagnostics and mesh visualization
-- Can promote to Sentinel when no dedicated Sentinel exists
+- Scan orchestration across mesh
 
 ---
 
@@ -49,8 +37,8 @@ Every device in the VARYNX mesh is assigned a role that determines its capabilit
 
 | Property | Value |
 |----------|-------|
-| Priority | Medium |
-| Engines | Mobile-specific (scam, clipboard, BLE skimmer, NFC, network, app behavior, device state, permissions, install, runtime, overlay, notification, USB, sensor, app tamper) |
+| Priority | 3 |
+| Engines | Full mobile (scam, clipboard, BLE skimmer, NFC, network, app behavior, device state, permissions, install, runtime, overlay, notification, USB, sensor, app tamper) |
 | Sync | LAN + BLE + NFC |
 | Storage | Local threat log |
 | Power | Battery-optimized (foreground service) |
@@ -58,79 +46,166 @@ Every device in the VARYNX mesh is assigned a role that determines its capabilit
 **Responsibilities**:
 - Primary personal protection device
 - 15 protection modules running in four-domain organism loop
-- Proximity-aware (BLE distance bracketing)
-- Paired with NOTIFIER (watch) for alert relay
+- Full reflex engine and identity engine
+- Full mesh participant
+- Forwards watch state into the mesh
 
 ---
 
-### NOTIFIER
-**Platforms**: Wear OS smartwatches
+### HUB_HOME
+**Platforms**: Linux home servers, Raspberry Pi, NUC, NAS
 
 | Property | Value |
 |----------|-------|
-| Priority | Low |
-| Engines | Minimal (guardian-lite: alert display, sensor relay) |
-| Sync | BLE only (paired to GUARDIAN phone) |
+| Priority | 4 |
+| Engines | Full OS-level (process, network, USB, file integrity, startup) |
+| Sync | LAN primary |
+| Storage | Full threat log, trust graph, device registry |
+| Power | Always-on assumed |
+
+**Responsibilities**:
+- Always-on LAN mesh anchor
+- Device discovery and onboarding
+- Local intelligence and cross-device threat correlation
+- Persistent storage and log aggregation
+
+---
+
+### HUB_WEAR
+**Platforms**: Desktop/server (JVM daemon)
+
+| Property | Value |
+|----------|-------|
+| Priority | 2 |
+| Engines | Micro guardian engine |
+| Sync | LAN (TCP/UDP multicast) |
+| Storage | Wear device state aggregation |
+| Power | Always-on (daemon) |
+
+**Responsibilities**:
+- Wear-specific hub node running on desktop/server
+- Aggregates Wear OS watch state
+- Participates in mesh as a satellite node
+- NOT a watch app — it's a desktop daemon
+
+---
+
+### NODE_LINUX
+**Platforms**: Linux servers, headless VPS
+
+| Property | Value |
+|----------|-------|
+| Priority | 3 |
+| Engines | Full headless guardian (process, network, file integrity, USB) |
+| Sync | LAN |
+| Storage | Full threat log |
+| Power | Always-on (server) |
+
+**Responsibilities**:
+- Headless server-grade monitoring
+- Same engine as desktop (no UI)
+- Full mesh participant
+
+---
+
+### NODE_POCKET
+**Platforms**: Raspberry Pi Zero, USB compute sticks
+
+| Property | Value |
+|----------|-------|
+| Priority | 1 |
+| Engines | BLE/NFC scanning, proximity |
+| Sync | LAN + BLE |
+| Storage | Threat buffer (5-min decay) |
+| Power | Battery-aware, duty-cycled |
+
+**Responsibilities**:
+- On-person micro guardian
+- Passive BLE environment scanner
+- Skimmer/swarm detection
+- Proximity-based alerts
+
+---
+
+### NODE_SATELLITE
+**Platforms**: Remote/edge hardware
+
+| Property | Value |
+|----------|-------|
+| Priority | 1 |
+| Engines | Micro guardian with offline buffer |
+| Sync | LAN (intermittent) |
+| Storage | Deep offline event buffer (1000 cap) |
+| Power | Low-power, adaptive cycle |
+
+**Responsibilities**:
+- Offline-first operation
+- Mesh repeater
+- Autonomous threat escalation
+- Burst sync on reconnection
+
+---
+
+### GUARDIAN_MICRO
+**Platforms**: Wear OS smartwatches (actual watch APK)
+
+| Property | Value |
+|----------|-------|
+| Priority | 1 |
+| Engines | Minimal (alert display, sensor relay) |
+| Sync | Data Layer to paired phone only |
 | Storage | Alert buffer (50 max) |
 | Power | Ultra-low, duty-cycled |
 
 **Responsibilities**:
-- Display threat alerts with severity-aware haptics
-- Relay sensor anomalies (heart rate, accelerometer, gyroscope)
-- DND-mode aware alert filtering
-- Complication data for watch face integration
+- Runs on the watch hardware
+- Auto-mode only micro guardian
+- Send sensor signals to paired phone
+- Does NOT participate in LAN mesh directly
 
 ---
 
-### POCKET (Pocket Node)
-**Platforms**: Raspberry Pi Zero, dedicated pocket hardware
+## Ecosystem Architecture
 
-| Property | Value |
-|----------|-------|
-| Priority | Low |
-| Engines | Headless (proximity, BLE scanning, isolation detection) |
-| Sync | BLE primary |
-| Storage | Threat buffer (5-min decay) |
-| Power | Battery-aware, duty-cycled BLE scanning |
-
-**Responsibilities**:
-- Passive BLE environment scanner
-- Skimmer/swarm detection
-- Mesh isolation monitoring
-- Proximity-based alerts for unknown or threatening devices
-
----
+```
+Wear OS Watch (GUARDIAN_MICRO)
+        ↓ Data Layer
+Android Phone (GUARDIAN)
+        ↓ Mesh
+Windows EXE (CONTROLLER)
+Linux Daemon (NODE_LINUX)
+Home Hub (HUB_HOME)
+Pocket Node (NODE_POCKET)
+Satellite Node (NODE_SATELLITE)
+WearOS JVM Daemon (HUB_WEAR)
+```
 
 ## Role Hierarchy
 
 ```
-SENTINEL (authority)
-  └── CONTROLLER (full engines + UI)
-        └── GUARDIAN (mobile protection)
-              └── NOTIFIER (alert relay)
-              └── POCKET (passive scanning)
+CONTROLLER (trust authority, weight 5)
+  └── HUB_HOME (LAN anchor, weight 4)
+        └── GUARDIAN (full mobile, weight 3)
+        └── NODE_LINUX (headless server, weight 3)
+              └── HUB_WEAR (wear aggregator, weight 2)
+                    └── NODE_POCKET (on-person, weight 1)
+                    └── NODE_SATELLITE (edge, weight 1)
+                    └── GUARDIAN_MICRO (watch, weight 1)
 ```
-
-## Trust Relationships
-
-| Initiator | Target | Trust Flow |
-|-----------|--------|------------|
-| SENTINEL | Any | Distributes policy, hosts intelligence packs |
-| CONTROLLER | GUARDIAN | Pairing hub, mesh visualization |
-| GUARDIAN | NOTIFIER | Alert relay, state sync (one-way) |
-| GUARDIAN | POCKET | Receives BLE scan results |
-| Any | Any | Mutual authentication via 3-step handshake |
 
 ## Role Assignment
 
 Roles are assigned at `DeviceKeyStore.generate(displayName, role)` and cannot be changed without re-keying. The role is encoded in the `DeviceIdentity` and broadcast in mesh heartbeats.
 
 ```kotlin
-enum class DeviceRole {
-    SENTINEL,    // Always-on anchor node
-    CONTROLLER,  // Desktop with full UI
-    GUARDIAN,    // Mobile primary device
-    NOTIFIER,    // Watch alert relay
-    POCKET       // Passive pocket scanner
+enum class DeviceRole(val label: String) {
+    CONTROLLER("Controller"),
+    GUARDIAN("Guardian"),
+    GUARDIAN_MICRO("Micro Guardian"),
+    HUB_HOME("Home Hub"),
+    HUB_WEAR("Wear Hub"),
+    NODE_SATELLITE("Satellite"),
+    NODE_POCKET("Pocket Node"),
+    NODE_LINUX("Linux Node")
 }
 ```
