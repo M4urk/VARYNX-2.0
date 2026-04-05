@@ -1,6 +1,10 @@
-# VARYNX 2.0
+<p align="center">
+  <img src="docs/varynx-banner.png" alt="VARYNX 2.0" width="100%">
+</p>
 
-**Multi-Platform Cybersecurity Mesh — Privacy-First Threat Intelligence Across Every Device**
+<h1 align="center">VARYNX 2.0</h1>
+
+<p align="center"><b>Multi-Platform Cybersecurity Mesh — Privacy-First Threat Intelligence Across Every Device</b></p>
 
 [![Platform](https://img.shields.io/badge/Platforms-Android%20%7C%20Windows%20%7C%20Linux%20%7C%20WearOS%20%7C%20IoT-00b4d8)](https://github.com/M4urk/VARYNX-2.0)
 [![Min SDK](https://img.shields.io/badge/Android%20Min%20SDK-34%20(Android%2014)-green)](https://developer.android.com/about/versions/14)

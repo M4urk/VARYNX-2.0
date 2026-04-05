@@ -27,6 +27,9 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+img { max-width: 100%; height: auto; }
+table { max-width: 100%; }
+
 body {
     font-family: 'Segoe UI', system-ui, sans-serif;
     color: var(--text);
@@ -93,6 +96,7 @@ body {
     height: 24px;
     flex-shrink: 0;
     border-radius: 4px;
+    object-fit: contain;
 }
 
 .varynx-logo-text {
@@ -214,6 +218,7 @@ body.desktop-mode .window-controls { display: flex; }
 #app-layout {
     display: flex;
     height: calc(100vh - 48px);
+    overflow: hidden;
 }
 
 /* ── NAV RAIL ── */
@@ -228,6 +233,7 @@ body.desktop-mode .window-controls { display: flex; }
     padding: 12px 8px;
     flex-shrink: 0;
     box-shadow: 1px 0 8px rgba(0,0,0,0.3);
+    overflow: hidden;
 }
 
 .nav-items { display: flex; flex-direction: column; gap: 2px; }
@@ -277,9 +283,10 @@ body.desktop-mode .window-controls { display: flex; }
     padding: 24px;
     overflow-y: auto;
     overflow-x: hidden;
+    min-width: 0;
 }
 
-.screen { display: none; }
+.screen { display: none; overflow: hidden; }
 .screen.active { display: block; }
 .screen-title { font-size: 20px; font-weight: 700; margin-bottom: 20px; }
 
@@ -289,6 +296,7 @@ body.desktop-mode .window-controls { display: flex; }
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
     gap: 16px;
+    overflow: hidden;
 }
 
 .card {
@@ -298,6 +306,7 @@ body.desktop-mode .window-controls { display: flex; }
     border: 1px solid var(--border);
     transition: all var(--t);
     animation: fadeSlideUp 250ms ease backwards;
+    overflow: hidden;
 }
 .card:nth-child(2) { animation-delay: 50ms; }
 .card:nth-child(3) { animation-delay: 100ms; }
@@ -353,11 +362,21 @@ body.desktop-mode .window-controls { display: flex; }
 
 /* ── SCROLLABLE ── */
 
-.scrollable { max-height: 300px; overflow-y: auto; }
+.scrollable { max-height: 300px; overflow-y: auto; overflow-x: hidden; }
 .scrollable.tall { max-height: 500px; }
-.scrollable::-webkit-scrollbar { width: 6px; }
-.scrollable::-webkit-scrollbar-track { background: transparent; }
-.scrollable::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ── GLOBAL SCROLLBAR — thin neon-blue ── */
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 240, 255, 0.35);
+    border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 240, 255, 0.6);
+}
+::-webkit-scrollbar-corner { background: transparent; }
 
 .empty-state { color: var(--text3); font-size: 13px; text-align: center; padding: 40px 0; }
 
