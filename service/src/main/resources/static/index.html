@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VARYNX — Control Center</title>
+    <link rel="stylesheet" href="/static/css/varynx.css">
+</head>
+<body>
+
+    <!-- STATUS BAR -->
+    <header id="status-bar">
+        <div class="status-left">
+            <div class="varynx-logo">
+                <img class="varynx-logo-icon" src="/static/img/varynx-logo.png" alt="V">
+                <span class="varynx-logo-text">VARYNX</span>
+            </div>
+            <span class="status-badge" id="status-id">—</span>
+        </div>
+        <div class="status-center">
+            <div class="status-item" id="status-mesh">
+                <span class="status-dot offline"></span>
+                <span>Mesh: Offline</span>
+            </div>
+            <div class="status-item" id="status-sync">
+                <span class="status-dot"></span>
+                <span>Sync: —</span>
+            </div>
+            <div class="status-item" id="status-alerts">
+                <span class="alert-icon">⚠</span>
+                <span>Alerts: 0</span>
+            </div>
+            <div class="status-item" id="status-mode">
+                <span>Mode: —</span>
+            </div>
+        </div>
+        <div class="status-right">
+            <span class="status-connection" id="ws-status" title="IPC Connection">●</span>
+            <button class="icon-btn" data-action="nav-settings" title="Settings">⚙</button>
+            <div class="window-controls" id="window-controls">
+                <button class="wc-btn" id="wc-min" title="Minimize">
+                    <svg viewBox="0 0 12 12" width="12" height="12"><line x1="2.5" y1="6" x2="9.5" y2="6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+                </button>
+                <button class="wc-btn" id="wc-max" title="Maximize">
+                    <svg viewBox="0 0 12 12" width="12" height="12"><rect x="2" y="2" width="8" height="8" fill="none" stroke="currentColor" stroke-width="1.2" rx="1.5"/></svg>
+                </button>
+                <button class="wc-btn wc-close" id="wc-close" title="Close">
+                    <svg viewBox="0 0 12 12" width="12" height="12"><line x1="2.5" y1="2.5" x2="9.5" y2="9.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><line x1="9.5" y1="2.5" x2="2.5" y2="9.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- LAYOUT -->
+    <div id="app-layout">
+
+        <!-- NAV RAIL -->
+        <nav id="nav-rail">
+            <div class="nav-items">
+                <button class="nav-item active" data-screen="dashboard">
+                    <span class="nav-icon"><svg viewBox="0 0 18 18" width="18" height="18"><rect x="1" y="1" width="7" height="7" rx="1.5" fill="currentColor"/><rect x="10" y="1" width="7" height="7" rx="1.5" fill="currentColor" opacity=".6"/><rect x="1" y="10" width="7" height="7" rx="1.5" fill="currentColor" opacity=".6"/><rect x="10" y="10" width="7" height="7" rx="1.5" fill="currentColor" opacity=".4"/></svg></span><span class="nav-label">Dashboard</span>
+                </button>
+                <button class="nav-item" data-screen="identity">
+                    <span class="nav-icon"><svg viewBox="0 0 18 18" width="18" height="18"><circle cx="12" cy="6" r="3.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M9 9L3 15m0-3h3m-1-1v3" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nav-label">Identity</span>
+                </button>
+                <button class="nav-item" data-screen="devices">
+                    <span class="nav-icon"><svg viewBox="0 0 18 18" width="18" height="18"><rect x="2" y="2" width="14" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M6 14h6M9 12v2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="nav-label">Devices</span>
+                </button>
+                <button class="nav-item" data-screen="mesh">
+                    <span class="nav-icon"><svg viewBox="0 0 18 18" width="18" height="18"><path d="M3 9a6 6 0 0 1 10.2-4.2M15 9a6 6 0 0 1-10.2 4.2" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/><polyline points="13.2,2.8 13.2,5.2 10.8,5.2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><polyline points="4.8,15.2 4.8,12.8 7.2,12.8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nav-label">Mesh Sync</span>
+                </button>
+                <button class="nav-item" data-screen="topology">
+                    <span class="nav-icon"><svg viewBox="0 0 18 18" width="18" height="18"><circle cx="9" cy="4" r="2" fill="currentColor"/><circle cx="4" cy="14" r="2" fill="currentColor"/><circle cx="14" cy="14" r="2" fill="currentColor"/><line x1="9" y1="6" x2="4" y2="12" stroke="currentColor" stroke-width="1.2"/><line x1="9" y1="6" x2="14" y2="12" stroke="currentColor" stroke-width="1.2"/><line x1="6" y1="14" x2="12" y2="14" stroke="currentColor" stroke-width="1.2"/></svg></span><span class="nav-label">Topology</span>
+                </button>
+                <button class="nav-item" data-screen="roles">
+                    <span class="nav-icon"><svg viewBox="0 0 18 18" width="18" height="18"><path d="M9 1.5L3 4.5v4.5c0 3.5 2.5 6.5 6 7.5 3.5-1 6-4 6-7.5V4.5L9 1.5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></span><span class="nav-label">Roles</span>
+                </button>
+                <button class="nav-item" data-screen="network">
+                    <span class="nav-icon"><svg viewBox="0 0 18 18" width="18" height="18"><circle cx="9" cy="9" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/><ellipse cx="9" cy="9" rx="3" ry="7" fill="none" stroke="currentColor" stroke-width="1"/><line x1="2" y1="9" x2="16" y2="9" stroke="currentColor" stroke-width="1"/></svg></span><span class="nav-label">Network</span>
+                </button>
+                <button class="nav-item" data-screen="threats">
+                    <span class="nav-icon"><svg viewBox="0 0 18 18" width="18" height="18"><path d="M10 1L4 10h4l-2 7 8-9h-4l2-7z" fill="currentColor"/></svg></span><span class="nav-label">Threats</span>
+                </button>
+                <button class="nav-item" data-screen="health">
+                    <span class="nav-icon"><svg viewBox="0 0 18 18" width="18" height="18"><path d="M9 15.5C4 12 1.5 8.5 1.5 5.5 1.5 3.5 3 2 5 2c1.5 0 3 1 4 2.5C10 3 11.5 2 13 2c2 0 3.5 1.5 3.5 3.5 0 3-2.5 6.5-7.5 10z" fill="currentColor"/></svg></span><span class="nav-label">Health</span>
+                </button>
+                <button class="nav-item" data-screen="security-scan">
+                    <span class="nav-icon"><svg viewBox="0 0 18 18" width="18" height="18"><path d="M9 1.5L3 4.5v4.5c0 3.5 2.5 6.5 6 7.5 3.5-1 6-4 6-7.5V4.5L9 1.5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M7 9l2 2 3-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nav-label">Security Scan</span>
+                </button>
+                <button class="nav-item" data-screen="skimmer-scan">
+                    <span class="nav-icon"><svg viewBox="0 0 18 18" width="18" height="18"><circle cx="9" cy="5" r="2.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M9 7.5v3M6 12c0-1.5 1.3-2 3-2s3 .5 3 2" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M4 8c-1.5 1-2.5 3-2.5 5M14 8c1.5 1 2.5 3 2.5 5" stroke="currentColor" stroke-width="1" fill="none" stroke-linecap="round" opacity=".5"/></svg></span><span class="nav-label">Skimmer Scan</span>
+                </button>
+
+                <button class="nav-item" data-screen="settings">
+                    <span class="nav-icon"><svg viewBox="0 0 18 18" width="18" height="18"><circle cx="9" cy="9" r="2.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M9 1v2M9 15v2M1 9h2M15 9h2M3.3 3.3l1.4 1.4M13.3 13.3l1.4 1.4M3.3 14.7l1.4-1.4M13.3 4.7l1.4-1.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="nav-label">Settings</span>
+                </button>
+            </div>
+            <div class="nav-footer">
+                <div class="role-badge">
+                    <span class="role-icon">▣</span>
+                    <div>
+                        <div class="role-name" id="role-name">Controller</div>
+                        <div class="role-label">ROLE</div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- MAIN PANEL -->
+        <main id="main-panel">
+
+            <!-- DASHBOARD -->
+            <section id="screen-dashboard" class="screen active">
+                <h2 class="screen-title">Dashboard</h2>
+                <div class="card-grid">
+                    <div class="card card-wide">
+                        <div class="card-header">
+                            <span class="threat-icon" id="threat-shield">🛡</span>
+                            <div>
+                                <h3 id="dashboard-threat-level">CLEAR</h3>
+                                <p class="card-sub" id="dashboard-mode">Sentinel Mode</p>
+                            </div>
+                        </div>
+                        <div id="lockdown-banner" class="lockdown-banner hidden">
+                            <span class="lockdown-icon">🔒</span>
+                            <div>
+                                <strong>MESH LOCKDOWN ACTIVE</strong>
+                                <p id="lockdown-info">All nodes in defensive posture</p>
+                            </div>
+                            <button class="btn btn-ghost btn-sm" data-action="cancel_lockdown">Cancel</button>
+                        </div>
+                        <div class="card-stats">
+                            <div class="stat"><span class="stat-value" id="dash-modules">0/0</span><span class="stat-label">Modules</span></div>
+                            <div class="stat"><span class="stat-value" id="dash-peers">0</span><span class="stat-label">Mesh Peers</span></div>
+                            <div class="stat"><span class="stat-value" id="dash-cycles">0</span><span class="stat-label">Cycles</span></div>
+                            <div class="stat"><span class="stat-value" id="dash-uptime">0s</span><span class="stat-label">Uptime</span></div>
+                        </div>
+                        <div class="mesh-summary">
+                            <div class="mesh-summary-item"><span class="mesh-label">Consensus</span><span class="threat-badge none" id="dash-consensus">NONE</span></div>
+                            <div class="mesh-summary-item"><span class="mesh-label">Leader</span><span id="dash-leader" class="mono-sm">—</span></div>
+                            <div class="mesh-summary-item"><span class="mesh-label">Quorum</span><span id="dash-quorum" class="status-chip">—</span></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3 class="card-title">Module Status</h3>
+                        <div id="module-category-list"></div>
+                    </div>
+                    <div class="card">
+                        <h3 class="card-title">Recent Events</h3>
+                        <div id="recent-events-list" class="scrollable"><p class="empty-state">No threats detected</p></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- IDENTITY -->
+            <section id="screen-identity" class="screen">
+                <h2 class="screen-title">Device Identity</h2>
+                <div class="card-grid">
+                    <div class="card card-wide">
+                        <h3 class="card-title">Local Identity</h3>
+                        <div class="detail-rows">
+                            <div class="detail-row"><span>Device ID</span><span id="id-device-id">—</span></div>
+                            <div class="detail-row"><span>Display Name</span><span id="id-display-name">—</span></div>
+                            <div class="detail-row"><span>Role</span><span id="id-role">—</span></div>
+                            <div class="detail-row"><span>Capabilities</span><span id="id-capabilities">—</span></div>
+                            <div class="detail-row"><span>Created</span><span id="id-created">—</span></div>
+                        </div>
+                    </div>
+                    <div class="card card-wide">
+                        <h3 class="card-title">Cryptographic Keys</h3>
+                        <div class="detail-rows">
+                            <div class="detail-row"><span>X25519 Public</span><code id="id-key-exchange">—</code></div>
+                            <div class="detail-row"><span>Ed25519 Public</span><code id="id-key-signing">—</code></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- DEVICES -->
+            <section id="screen-devices" class="screen">
+                <h2 class="screen-title">Devices</h2>
+                <div class="toolbar">
+                    <button class="btn btn-primary" data-action="start-pairing">Generate Pairing Code</button>
+                    <button class="btn btn-secondary" data-action="join-pairing">Join with Code</button>
+                </div>
+                <div class="card-grid">
+                    <div class="card">
+                        <h3 class="card-title">Trusted <span class="badge" id="trusted-count">0</span></h3>
+                        <div id="trusted-devices-list" class="scrollable"><p class="empty-state">No trusted peers — pair a device to add</p></div>
+                    </div>
+                    <div class="card">
+                        <h3 class="card-title">Discovered <span class="badge badge-dim" id="discovered-count">0</span></h3>
+                        <div id="discovered-devices-list" class="scrollable"><p class="empty-state">Scanning LAN…</p></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MESH SYNC -->
+            <section id="screen-mesh" class="screen">
+                <h2 class="screen-title">Mesh Sync</h2>
+                <div class="card-grid">
+                    <div class="card card-wide">
+                        <h3 class="card-title">Mesh Status</h3>
+                        <div class="detail-rows">
+                            <div class="detail-row"><span>Status</span><span id="mesh-active">—</span></div>
+                            <div class="detail-row"><span>Local Device</span><span id="mesh-local-id">—</span></div>
+                            <div class="detail-row"><span>Role</span><span id="mesh-role">—</span></div>
+                            <div class="detail-row"><span>Trusted Peers</span><span id="mesh-trusted">0</span></div>
+                            <div class="detail-row"><span>Discovered</span><span id="mesh-discovered">0</span></div>
+                            <div class="detail-row"><span>Last Heartbeat</span><span id="mesh-heartbeat">—</span></div>
+                            <div class="detail-row"><span>Sync Status</span><span id="mesh-sync-status">—</span></div>
+                        </div>
+                    </div>
+                    <div class="card card-wide">
+                        <h3 class="card-title">Vector Clock</h3>
+                        <div id="vector-clock-display" class="mono-block"><p class="empty-state">No clock entries</p></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- NETWORK -->
+            <section id="screen-network" class="screen">
+                <h2 class="screen-title">Network</h2>
+                <div class="card-grid">
+                    <div class="card card-wide">
+                        <h3 class="card-title">Interfaces</h3>
+                        <div id="network-interfaces" class="scrollable"><p class="empty-state">Loading…</p></div>
+                    </div>
+                    <div class="card">
+                        <h3 class="card-title">Network Info</h3>
+                        <div class="detail-rows">
+                            <div class="detail-row"><span>Gateway</span><span id="net-gateway">—</span></div>
+                            <div class="detail-row"><span>DNS</span><span id="net-dns">—</span></div>
+                            <div class="detail-row"><span>Public IP</span><span id="net-public-ip">—</span></div>
+                            <div class="detail-row"><span>Exposure</span><span id="net-exposure">—</span></div>
+                            <div class="detail-row"><span>Connections</span><span id="net-connections">0</span></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3 class="card-title">Open Ports</h3>
+                        <div id="open-ports-list" class="scrollable"><p class="empty-state">None detected</p></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- THREATS -->
+            <section id="screen-threats" class="screen">
+                <h2 class="screen-title">Threat Events</h2>
+                <div class="toolbar">
+                    <button class="btn btn-secondary" data-action="force_scan">Force Scan</button>
+                    <button class="btn btn-ghost" data-action="clear_logs">Clear Logs</button>
+                    <button class="btn btn-danger" data-action="lockdown">🔒 Lockdown</button>
+                </div>
+                <div class="card-grid">
+                    <div class="card card-full">
+                        <h3 class="card-title">Threat Timeline</h3>
+                        <div id="threat-timeline" class="threat-timeline">
+                            <div class="timeline-track">
+                                <div class="timeline-bar" id="timeline-bar"></div>
+                            </div>
+                            <div class="timeline-labels">
+                                <span>1h ago</span><span>45m</span><span>30m</span><span>15m</span><span>Now</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card card-full">
+                        <h3 class="card-title">Event Log</h3>
+                        <div id="threat-events-list" class="scrollable tall"><p class="empty-state">All clear — no threats</p></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- HEALTH -->
+            <section id="screen-health" class="screen">
+                <h2 class="screen-title">System Health</h2>
+                <div class="card-grid">
+                    <div class="card">
+                        <h3 class="card-title">Service</h3>
+                        <div class="detail-rows">
+                            <div class="detail-row"><span>Uptime</span><span id="health-uptime">—</span></div>
+                            <div class="detail-row"><span>Cycles</span><span id="health-cycles">0</span></div>
+                            <div class="detail-row"><span>Log Entries</span><span id="health-logs">0</span></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3 class="card-title">JVM</h3>
+                        <div class="detail-rows">
+                            <div class="detail-row"><span>Heap Used</span><span id="health-heap-used">—</span></div>
+                            <div class="detail-row"><span>Heap Max</span><span id="health-heap-max">—</span></div>
+                        </div>
+                        <div class="progress-bar"><div class="progress-fill" id="heap-fill"></div></div>
+                    </div>
+                    <div class="card card-wide">
+                        <h3 class="card-title">Engine Status</h3>
+                        <div id="engine-status-list" class="detail-rows"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SETTINGS -->
+            <section id="screen-settings" class="screen">
+                <h2 class="screen-title">Settings</h2>
+
+                <!-- Tab Bar -->
+                <div class="settings-tabs">
+                    <button class="settings-tab active" data-settings-tab="general">General</button>
+                    <button class="settings-tab" data-settings-tab="modules">Modules</button>
+                    <button class="settings-tab" data-settings-tab="about">About</button>
+                </div>
+
+                <!-- General Tab -->
+                <div class="settings-panel active" id="settings-panel-general">
+                    <div class="settings-section">
+                        <div class="settings-section-main">
+                            <div class="settings-section-text">
+                                <div class="settings-section-title">Device Name</div>
+                                <div class="settings-section-desc" id="set-name">—</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="settings-section">
+                        <div class="settings-section-main">
+                            <div class="settings-section-text">
+                                <div class="settings-section-title">Role</div>
+                                <div class="settings-section-desc" id="set-role">—</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="settings-section">
+                        <div class="settings-section-main">
+                            <div class="settings-section-text">
+                                <div class="settings-section-title">Mesh Network</div>
+                                <div class="settings-section-desc" id="set-mesh">—</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="settings-section">
+                        <div class="settings-section-main">
+                            <div class="settings-section-text">
+                                <div class="settings-section-title">Mesh Port</div>
+                                <div class="settings-section-desc" id="set-port">—</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="settings-section">
+                        <div class="settings-section-main">
+                            <div class="settings-section-text">
+                                <div class="settings-section-title">Heartbeat Interval</div>
+                                <div class="settings-section-desc" id="set-heartbeat">—</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="settings-section">
+                        <div class="settings-section-main">
+                            <div class="settings-section-text">
+                                <div class="settings-section-title">Guardian Cycle</div>
+                                <div class="settings-section-desc" id="set-cycle">—</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="settings-section">
+                        <div class="settings-section-main">
+                            <div class="settings-section-text">
+                                <div class="settings-section-title">Log Retention</div>
+                                <div class="settings-section-desc" id="set-logs">—</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="settings-section">
+                        <div class="settings-section-main">
+                            <div class="settings-section-text">
+                                <div class="settings-section-title">Auto Start</div>
+                                <div class="settings-section-desc" id="set-autostart">—</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modules Tab -->
+                <div class="settings-panel" id="settings-panel-modules">
+                    <div id="settings-modules-list" class="scrollable tall"></div>
+                </div>
+
+                <!-- About Tab -->
+                <div class="settings-panel" id="settings-panel-about">
+                    <div class="settings-section">
+                        <div class="settings-section-main">
+                            <div class="settings-section-text">
+                                <div class="settings-section-title">App Version</div>
+                                <div class="settings-section-desc" id="about-app-version">2.0.0-beta</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="settings-section">
+                        <div class="settings-section-main">
+                            <div class="settings-section-text">
+                                <div class="settings-section-title">Build</div>
+                                <div class="settings-section-desc" id="about-build-code">20001</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="settings-section">
+                        <div class="settings-section-main">
+                            <div class="settings-section-text">
+                                <div class="settings-section-title">Service Status</div>
+                                <div class="settings-section-desc">Check guardian service health and connectivity.</div>
+                            </div>
+                            <button class="btn btn-ghost btn-sm" data-action="force_scan">Check</button>
+                        </div>
+                    </div>
+                    <div class="settings-section">
+                        <div class="settings-section-main">
+                            <div class="settings-section-text">
+                                <div class="settings-section-title">Diagnostics</div>
+                                <div class="settings-section-desc">Generate diagnostic data for troubleshooting.</div>
+                            </div>
+                            <button class="settings-expand-btn" id="diag-expand-btn">
+                                <svg viewBox="0 0 12 12" width="12" height="12"><polyline points="3,4 6,7 9,4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </button>
+                        </div>
+                        <div class="settings-section-body hidden" id="about-diag-body" style="display:none">
+                            <div class="settings-section-inner">
+                                <div class="detail-rows">
+                                    <div class="detail-row"><span>Uptime</span><span id="about-diag-uptime">—</span></div>
+                                    <div class="detail-row"><span>Guardian Cycles</span><span id="about-diag-cycles">0</span></div>
+                                    <div class="detail-row"><span>Active Modules</span><span id="about-diag-modules">0 / 0</span></div>
+                                    <div class="detail-row"><span>Heap Used</span><span id="about-diag-heap">—</span></div>
+                                    <div class="detail-row"><span>Mesh Peers</span><span id="about-diag-peers">0</span></div>
+                                    <div class="detail-row"><span>Log Entries</span><span id="about-diag-logs">0</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="settings-section">
+                        <div class="settings-section-main">
+                            <div class="settings-section-text">
+                                <div class="settings-section-title">License</div>
+                                <div class="settings-section-desc">All Rights Reserved &copy; 2026 Varynx. Proprietary software.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="settings-section">
+                        <div class="settings-section-main">
+                            <div class="settings-section-text">
+                                <div class="settings-section-title">Platform</div>
+                                <div class="settings-section-desc">Kotlin Multiplatform &middot; Desktop Controller</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TOPOLOGY -->
+            <section id="screen-topology" class="screen">
+                <h2 class="screen-title">Mesh Topology</h2>
+                <div class="card-grid">
+                    <div class="card card-full">
+                        <h3 class="card-title">Network Graph</h3>
+                        <div id="topology-canvas" class="topology-canvas">
+                            <svg id="topology-svg" width="100%" height="400"></svg>
+                        </div>
+                    </div>
+                    <div class="card card-full">
+                        <h3 class="card-title">Mesh State</h3>
+                        <div class="detail-rows">
+                            <div class="detail-row"><span>Leader</span><span id="topo-leader">—</span></div>
+                            <div class="detail-row"><span>Consensus Threat</span><span class="threat-badge none" id="topo-consensus">NONE</span></div>
+                            <div class="detail-row"><span>Lockdown</span><span id="topo-lockdown">Inactive</span></div>
+                            <div class="detail-row"><span>Total Nodes</span><span id="topo-nodes">0</span></div>
+                            <div class="detail-row"><span>Trust Edges</span><span id="topo-edges">0</span></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ROLES -->
+            <section id="screen-roles" class="screen">
+                <h2 class="screen-title">Device Roles</h2>
+                <div class="card-grid">
+                    <div class="card card-full">
+                        <h3 class="card-title">Role Hierarchy</h3>
+                        <div id="role-hierarchy" class="role-hierarchy"></div>
+                    </div>
+                    <div class="card card-full">
+                        <h3 class="card-title">Role Details</h3>
+                        <div id="role-details-list"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECURITY SCAN -->
+            <section id="screen-security-scan" class="screen">
+                <h2 class="screen-title">Security Scan</h2>
+                <div class="toolbar">
+                    <button class="btn btn-primary" data-action="run-security-scan">Run Security Audit</button>
+                </div>
+                <div class="card-grid">
+                    <div class="card card-wide">
+                        <div class="card-header">
+                            <span class="threat-icon">🛡</span>
+                            <div>
+                                <h3 id="security-scan-status">Ready</h3>
+                                <p class="card-sub">Device state · Permissions · Overlays · Apps · Network</p>
+                            </div>
+                        </div>
+                        <div class="detail-rows">
+                            <div class="detail-row"><span>Overall Threat</span><span class="threat-badge none" id="security-scan-level">NONE</span></div>
+                            <div class="detail-row"><span>Findings</span><span id="security-scan-count">0</span></div>
+                        </div>
+                    </div>
+                    <div class="card card-full">
+                        <h3 class="card-title">Findings</h3>
+                        <div id="security-scan-findings" class="scrollable tall"><p class="empty-state">Run a scan to check device security</p></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SKIMMER SCAN -->
+            <section id="screen-skimmer-scan" class="screen">
+                <h2 class="screen-title">Skimmer Scan</h2>
+                <div class="toolbar">
+                    <button class="btn btn-primary" data-action="run-skimmer-scan">Scan for Skimmers</button>
+                </div>
+                <div class="card-grid">
+                    <div class="card card-wide">
+                        <div class="card-header">
+                            <span class="threat-icon">📡</span>
+                            <div>
+                                <h3 id="skimmer-scan-status">Ready</h3>
+                                <p class="card-sub">BLE patterns · UUID detection · RSSI analysis · POS signatures</p>
+                            </div>
+                        </div>
+                        <div class="detail-rows">
+                            <div class="detail-row"><span>Overall Threat</span><span class="threat-badge none" id="skimmer-scan-level">NONE</span></div>
+                            <div class="detail-row"><span>Suspicious Devices</span><span id="skimmer-scan-count">0</span></div>
+                        </div>
+                    </div>
+                    <div class="card card-full">
+                        <h3 class="card-title">Scan Results</h3>
+                        <div id="skimmer-scan-findings" class="scrollable tall"><p class="empty-state">Run a scan to check for Bluetooth skimmers</p></div>
+                    </div>
+                </div>
+            </section>
+
+
+
+        </main>
+    </div>
+
+    <!-- PAIRING OVERLAY -->
+    <div id="pairing-overlay" class="overlay hidden">
+        <div class="overlay-card">
+            <h3>PAIRING CODE</h3>
+            <div id="pairing-code-display" class="pairing-digits"></div>
+            <p class="overlay-hint">Enter this code on the other device to establish trust.</p>
+            <p class="overlay-sub">No accounts. No cloud. Local trust only.</p>
+            <button class="btn btn-ghost" data-action="close-pairing">Cancel</button>
+        </div>
+    </div>
+
+    <!-- JOIN PAIRING OVERLAY -->
+    <div id="join-pairing-overlay" class="overlay hidden">
+        <div class="overlay-card">
+            <h3>JOIN WITH CODE</h3>
+            <p class="overlay-hint" style="margin-bottom: 20px">Enter the 6-digit pairing code from the other device.</p>
+            <input id="join-code-input" class="join-code-input" type="text" maxlength="6" inputmode="numeric" pattern="\d{6}" placeholder="000000" autocomplete="off">
+            <div style="display:flex;gap:10px;justify-content:center;margin-top:20px">
+                <button class="btn btn-primary" data-action="submit-join">Connect</button>
+                <button class="btn btn-ghost" data-action="close-join">Cancel</button>
+            </div>
+            <p class="overlay-sub" style="margin-top:16px">No accounts. No cloud. Local trust only.</p>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

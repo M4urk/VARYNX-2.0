@@ -1,15 +1,27 @@
+### IDE ###
 *.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
+.idea/
 .DS_Store
-/build
+
+### Gradle ###
+.gradle/
+build/
+local.properties
+gradle/wrapper/gradle-wrapper.jar
+
+### Build artifacts ###
 /captures
 .externalNativeBuild
 .cxx
-local.properties
+
+### Sensitive / Internal ###
+*.jks
+*.keystore
+2.0 road map.txt
+
+### Temp / Working files ###
+build-output.txt
+test-output.txt
+test-output2.txt
+release-*/
+varynx_logo.png.png

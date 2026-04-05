@@ -1,0 +1,30 @@
+[Unit]
+Description=VARYNX 2.0 Linux Guardian Daemon
+Documentation=https://varynx.local/docs
+After=network.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/opt/varynx/bin/varynx-guardian
+WorkingDirectory=/opt/varynx
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=varynx-guardian
+
+# Security hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=read-only
+PrivateTmp=true
+ReadOnlyPaths=/etc /usr /sys
+ReadWritePaths=/opt/varynx/data
+
+# Process limits
+LimitNOFILE=4096
+MemoryMax=256M
+
+[Install]
+WantedBy=multi-user.target

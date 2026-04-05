@@ -5,6 +5,29 @@ This file contains public-safe information only. No internal implementation deta
 
 ---
 
+## [2.0.0-beta.2] — 2026-04-05
+
+### Added
+- **Manual trust management** — revoke trust from individual devices on Android (MeshScreen) and Desktop (IPC)
+- **Trusted devices UI** — online/offline trusted peer sections in Android MeshScreen with revoke confirmation
+- **PRIVACY.md** — comprehensive zero-collection privacy policy
+- **CONTRIBUTING.md** — contribution guidelines and security reporting
+- **CODE_OF_CONDUCT.md** — community standards and enforcement policy
+
+### Fixed
+- **Trust persistence** — trust graph now saved immediately on pairing across all 7 platforms (was only saved on shutdown — crash lost all pairings)
+- **Linux identity regeneration** — Linux daemon no longer creates a new device identity on every restart (was calling `DeviceKeyStore.generate()` instead of `persistence.loadOrCreateKeyStore()`)
+- **ProGuard rules** — comprehensive R8 keep rules for kotlinx-serialization, Ktor, ML Kit, CameraX, crypto, mesh protocol, coroutines, Compose, and DataStore (was empty — release APK would crash)
+- **CoreDomain thread safety** — all module list access now synchronized with `withLock` to prevent race conditions between service and UI threads
+- **IPC auth token leak** — service no longer prints authentication token to stdout on startup
+- **POLICY_UPDATE handling** — mesh policy update messages now properly logged as threat events instead of silently ignored
+
+### Changed
+- README.md rewritten — comprehensive documentation matching V1 quality with badges, architecture diagram, module tables, test suite summary, and Founder Story
+- Test count increased to 413 across 31 test suites (0 failures)
+
+---
+
 ## [2.0.0-beta] — 2026-04-04
 
 ### Added
