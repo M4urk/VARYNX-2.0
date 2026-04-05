@@ -1,6 +1,6 @@
-/*
+﻿/*
  * VARYNX 2.0 — Proprietary License
- * Copyright (c) 2024–2026 VARYNX
+ * Copyright (c) 2026 VARYNX
  * All rights reserved.
  */
 package com.varynx.varynx20.ui.screens
@@ -330,7 +330,7 @@ fun SettingsScreen(
                     "• Offline-first — all processing stays on-device\n" +
                     "• Encrypted mesh networking via Wi-Fi Direct & mDNS\n" +
                     "• Role-based trust hierarchy with 8 device roles\n\n" +
-                    "© 2024–2026 VARYNX. All rights reserved.",
+                    "© 2026 VARYNX. All rights reserved.",
             onDismiss = { showAboutDialog = false }
         )
     }

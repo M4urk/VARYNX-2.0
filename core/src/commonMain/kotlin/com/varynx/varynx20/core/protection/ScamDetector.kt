@@ -1,6 +1,6 @@
-/*
+﻿/*
  * VARYNX 2.0 — Proprietary License
- * Copyright (c) 2024–2026 VARYNX
+ * Copyright (c) 2026 VARYNX
  * All rights reserved.
  */
 package com.varynx.varynx20.core.protection
@@ -58,5 +58,16 @@ class ScamDetector : ProtectionModule {
             )
         }
         return level
+    }
+
+    /**
+     * Accepts an externally-generated ThreatEvent (e.g. from Android SMS/call analysis).
+     * Keeps the highest-severity event as the module's current finding.
+     */
+    fun ingestExternalEvent(event: ThreatEvent) {
+        val current = lastEvent
+        if (current == null || event.threatLevel > current.threatLevel) {
+            lastEvent = event
+        }
     }
 }

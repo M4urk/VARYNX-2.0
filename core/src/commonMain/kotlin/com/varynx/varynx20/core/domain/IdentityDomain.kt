@@ -1,6 +1,6 @@
-/*
+﻿/*
  * VARYNX 2.0 — Proprietary License
- * Copyright (c) 2024–2026 VARYNX
+ * Copyright (c) 2026 VARYNX
  * All rights reserved.
  */
 package com.varynx.varynx20.core.domain
@@ -94,7 +94,7 @@ class IdentityDomain : GuardianDomain {
     /**
      * The seven module categories that define the guardian's architecture.
      * V2 activates Protection, Reflex, and Engine (35 modules).
-     * Intelligence, Identity, Mesh, and Platform are locked for V3+.
+     * Intelligence, Identity, Mesh, and Platform are reserved for future activation.
      */
     fun getArchitectureSummary(): Map<ModuleCategory, ArchitectureSlice> {
         return ModuleCategory.entries.associateWith { category ->

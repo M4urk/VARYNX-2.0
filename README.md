@@ -1,4 +1,4 @@
-<p align="center">
+﻿<p align="center">
   <img src="docs/varynx-banner.png" alt="VARYNX 2.0" width="100%">
 </p>
 
@@ -131,7 +131,7 @@ Adaptive learning modules that evolve with your device's behavior:
 ```
 
 - **Kotlin Multiplatform** — Shared core across all platforms
-- **78 registered modules** — 47 active in V2, 29 reserved for V3+
+- **78 registered modules** — 47 active in 2.0
 - **Offline-only** — Zero network calls, zero cloud dependencies
 - **Battery-aware** — 30-second guardian cycle with battery optimization
 - **Secure IPC** — Desktop service binds to localhost with token authentication
@@ -253,17 +253,6 @@ See [PRIVACY.md](PRIVACY.md) for the full privacy policy.
 - Trust graph with non-transitive, user-approved trust
 - 413 unit tests across 31 test suites
 
-### V3 (Planned) — Expansion
-
-- 29 additional modules currently reserved
-- Policy rule deserialization and remote enforcement
-- Transitive trust chains (user-approved chain trust)
-- Advanced mesh consensus algorithms
-- Native WearOS Compose UI
-- CI/CD pipeline with automated release builds
-
-&nbsp;
-
 ## Security
 
 Found a vulnerability? Please report it responsibly.
@@ -284,7 +273,7 @@ Please follow our [Code of Conduct](CODE_OF_CONDUCT.md) in all interactions.
 
 ## License
 
-Copyright &copy; 2024–2026 VARYNX. All rights reserved.
+Copyright &copy; 2026 VARYNX. All rights reserved.
 
 This software is proprietary. See [LICENSE](LICENSE) for details.
 

@@ -1,6 +1,6 @@
-/*
+﻿/*
  * VARYNX 2.0 — Proprietary License
- * Copyright (c) 2024–2026 VARYNX
+ * Copyright (c) 2026 VARYNX
  * All rights reserved.
  */
 package com.varynx.varynx20.core.mesh
@@ -179,7 +179,7 @@ class MeshEngine(
                             sourceModuleId = "MESH_POLICY",
                             threatLevel = com.varynx.varynx20.core.model.ThreatLevel.LOW,
                             title = "Policy update received",
-                            description = "Controller ${envelope.senderId} sent policy update (V3 — not yet applied)"
+                            description = "Controller ${envelope.senderId} sent policy update (not yet applied)"
                         ),
                         envelope.senderId
                     )

@@ -1,6 +1,6 @@
-/*
+﻿/*
  * VARYNX 2.0 — Proprietary License
- * Copyright (c) 2024–2026 VARYNX
+ * Copyright (c) 2026 VARYNX
  * All rights reserved.
  */
 package com.varynx.varynx20.service
@@ -24,6 +24,8 @@ import java.net.NetworkInterface
  */
 class AndroidDetectionProvider(private val context: Context) {
 
+    private val scamCallEngine = ScamCallEngine(context)
+
     /**
      * Run all detection checks and feed results into the given modules.
      * Call once per guardian cycle, before organism.cycle().
@@ -36,7 +38,23 @@ class AndroidDetectionProvider(private val context: Context) {
                 is ClipboardShield -> feedClipboard(module)
                 is OverlayDetector -> feedOverlay(module)
                 is InstallMonitor -> feedInstallMonitor(module)
+                is ScamDetector -> feedScamDetector(module)
             }
+        }
+    }
+
+    /**
+     * Feeds the core ScamDetector module with findings from the Android-specific
+     * ScamCallEngine (SMS + call log + call screening analysis).
+     */
+    private fun feedScamDetector(module: ScamDetector) {
+        try {
+            val events = scamCallEngine.analyzeAsEvents()
+            for (event in events) {
+                module.ingestExternalEvent(event)
+            }
+        } catch (e: Exception) {
+            // Permission denied or content provider unavailable — expected
         }
     }
 
