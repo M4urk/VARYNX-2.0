@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+set -eu
+
+echo "[pre-push] running public safety scan..."
+if command -v python >/dev/null 2>&1; then
+  python tools/security/public_safety_scan.py
+elif command -v py >/dev/null 2>&1; then
+  py -3 tools/security/public_safety_scan.py
+else
+  echo "Python not found. Install Python to run safety scan." >&2
+  exit 1
+fi

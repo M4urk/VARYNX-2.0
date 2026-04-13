@@ -1,0 +1,9 @@
+repos:
+  - repo: local
+    hooks:
+      - id: varynx-public-safety-scan
+        name: VARYNX Public Safety Scan
+        entry: python tools/security/public_safety_scan.py
+        language: system
+        pass_filenames: false
+        stages: [pre-commit, pre-push]
