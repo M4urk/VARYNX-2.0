@@ -42,6 +42,8 @@ EXCLUDE_PREFIXES = (
     ".gradle/",
 )
 
+SELF_PATH = "tools/security/public_safety_scan.py"
+
 
 def run_git(*args: str) -> str:
     proc = subprocess.run(
@@ -79,6 +81,10 @@ def scan_files(files: list[str]) -> list[str]:
     for rel in files:
         if any(p.search(rel) for p in compiled_file):
             violations.append(f"forbidden tracked file type: {rel}")
+
+        # Skip scanning this scanner source text for its own regex marker literals.
+        if rel == SELF_PATH:
+            continue
 
         path = ROOT / rel
         if not path.is_file():
